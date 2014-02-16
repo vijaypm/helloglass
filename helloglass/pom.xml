@@ -58,11 +58,11 @@
 			<version>v1-rev26-1.17.0-rc</version>
 		</dependency>
 <dependency>
-	<groupId>com.sun.jersey</groupId>
-	<artifactId>jersey-json</artifactId>
-	<version>1.9</version>
-</dependency>
-	</dependencies>
+<!-- http://code.google.com/p/genson/        Apache License 2.0 -->
+  <groupId>com.owlike</groupId>
+  <artifactId>genson</artifactId>
+  <version>0.98</version>
+</dependency>	</dependencies>
 	<properties>
 		<jersey.version>2.5.1</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
