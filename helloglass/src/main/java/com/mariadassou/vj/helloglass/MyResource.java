@@ -2,13 +2,17 @@ package com.mariadassou.vj.helloglass;
 
 import java.util.logging.Logger;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+
+import com.google.api.services.mirror.model.Notification;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -31,11 +35,20 @@ public class MyResource {
         return "Got it!";
     }
 	
-	@Path("postnotify")
+	@Path("postobject")
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
-	public Response postNotify(BasicObject reqObj){
-		LOG.info("received notification:" + reqObj);
+	public Response postObject(BasicObject reqObj){
+		LOG.info("received object:" + reqObj);
 		return Response.status(200).build();
 	}
+
+	@Path("glassnotify")
+	@POST
+    @Consumes(MediaType.APPLICATION_JSON)
+	public Response postGlassNotify(Notification notification, @Context HttpServletRequest httpRequest){
+		LOG.info("received notification:" + notification);
+		return Response.status(200).build();
+	}
+
 }

@@ -16,6 +16,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.google.api.services.mirror.model.Notification;
 import com.mariadassou.vj.helloglass.BasicObject;
 import com.mariadassou.vj.helloglass.MyResource;
 
@@ -38,12 +39,22 @@ public class TestMyResource extends JerseyTest {
 	}
 
 	@Test
-	public void testPostNotify() {
+	public void testPostObject() {
 		BasicObject reqObj = new BasicObject();
 		reqObj.setAge(80);
 		reqObj.setName("Joe");
-		Entity<BasicObject> notificationEntity = Entity.entity(reqObj, MediaType.APPLICATION_JSON);
-		Response response = target("myresource/postnotify").request().post(notificationEntity); //Here we send POST request
+		Entity<BasicObject> objectEntity = Entity.entity(reqObj, MediaType.APPLICATION_JSON);
+		Response response = target("myresource/postobject").request().post(objectEntity); //Here we send POST request
+	    assertEquals(200, response.getStatus());
+	}
+	
+	@Test
+	public void testPostNotify() {
+		Notification notification = new Notification();
+		notification.setItemId("123");
+		notification.setCollection("timeline");
+		Entity<Notification> notificationEntity = Entity.entity(notification, MediaType.APPLICATION_JSON);
+		Response response = target("myresource/glassnotify").request().post(notificationEntity); //Here we send POST request
 	    assertEquals(200, response.getStatus());
 	}
 }
