@@ -47,22 +47,32 @@
 		<dependency>
 			<groupId>org.glassfish.jersey.test-framework.providers</groupId>
 			<artifactId>jersey-test-framework-provider-jetty</artifactId>
+			<scope>provided</scope>
 		</dependency>
-<!-- 		<dependency>
-			<groupId>org.glassfish.jersey.media</groupId>
-			<artifactId>jersey-media-moxy</artifactId>
-		</dependency>
- -->		<dependency>
+		<dependency>
 			<groupId>com.google.apis</groupId>
 			<artifactId>google-api-services-mirror</artifactId>
 			<version>v1-rev26-1.17.0-rc</version>
 		</dependency>
-<dependency>
-<!-- http://code.google.com/p/genson/        Apache License 2.0 -->
-  <groupId>com.owlike</groupId>
-  <artifactId>genson</artifactId>
-  <version>0.98</version>
-</dependency>	</dependencies>
+		<!-- Doesn't work for Google Glass API Notification POJOs <dependency> 
+			<groupId>org.glassfish.jersey.media</groupId> <artifactId>jersey-media-moxy</artifactId> 
+			</dependency> -->
+		<!-- Doesn't work for Google Glass API Notification POJOs <dependency> 
+			Does not require to configure jersery providers <groupId>com.owlike</groupId> 
+			<artifactId>genson</artifactId> <version>0.98</version> </dependency> -->
+		<dependency>
+			<!-- Add com.fasterxml.jackson.jaxrs.json to jersey config providers param -->
+			<groupId>com.fasterxml.jackson.jaxrs</groupId>
+			<artifactId>jackson-jaxrs-json-provider</artifactId>
+			<version>2.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.1.1</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 	<properties>
 		<jersey.version>2.5.1</jersey.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
