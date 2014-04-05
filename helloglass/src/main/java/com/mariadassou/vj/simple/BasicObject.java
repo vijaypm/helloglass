@@ -1,4 +1,4 @@
-package com.mariadassou.vj.helloglass;
+package com.mariadassou.vj.simple;
 
 public class BasicObject {
 

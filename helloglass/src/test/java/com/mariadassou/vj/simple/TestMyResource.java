@@ -1,4 +1,4 @@
-package helloglass;
+package com.mariadassou.vj.simple;
 
 import static org.junit.Assert.assertEquals;
 
@@ -17,8 +17,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.google.api.services.mirror.model.Notification;
-import com.mariadassou.vj.helloglass.BasicObject;
-import com.mariadassou.vj.helloglass.MyResource;
+import com.mariadassou.vj.simple.BasicObject;
+import com.mariadassou.vj.simple.MyResource;
 
 public class TestMyResource extends JerseyTest {
 	
