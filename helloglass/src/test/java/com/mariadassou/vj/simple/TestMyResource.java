@@ -1,7 +1,9 @@
 package com.mariadassou.vj.simple;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.Logger;
@@ -9,6 +11,7 @@ import java.util.logging.Logger;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
 
 import org.glassfish.jersey.server.ResourceConfig;
@@ -49,12 +52,33 @@ public class TestMyResource extends JerseyTest {
 	}
 	
 	@Test
-	public void testPostNotify() {
+	public void testPostNotify_newCookie() {
 		Notification notification = new Notification();
 		notification.setItemId("123");
 		notification.setCollection("timeline");
 		Entity<Notification> notificationEntity = Entity.entity(notification, MediaType.APPLICATION_JSON);
 		Response response = target("myresource/glassnotify").request().post(notificationEntity); //Here we send POST request
 	    assertEquals(200, response.getStatus());
+	    Map<String, NewCookie> cookies = response.getCookies();
+	    assertEquals(1, cookies.size());
+	    NewCookie sessionCookie = cookies.get("JSESSIONID");
+	    assertNotNull(sessionCookie);
+	    assertEquals("123-test-jersey-cookie", sessionCookie.getValue());
+	}
+
+	@Test
+	public void testPostNotify_returnCookie() {
+		Notification notification = new Notification();
+		notification.setItemId("123");
+		notification.setCollection("timeline");
+		Entity<Notification> notificationEntity = Entity.entity(notification, MediaType.APPLICATION_JSON);
+		NewCookie sessionCookie = new NewCookie("JSESSIONID", "abc-test-jersey-cookie");
+		Response response = target("myresource/glassnotify").request().cookie(sessionCookie).post(notificationEntity); //Here we send POST request
+	    assertEquals(200, response.getStatus());
+	    Map<String, NewCookie> cookies = response.getCookies();
+	    assertEquals(1, cookies.size());
+	    sessionCookie = cookies.get("JSESSIONID");
+	    assertNotNull(sessionCookie);
+	    assertEquals("abc-test-jersey-cookie", sessionCookie.getValue());
 	}
 }
