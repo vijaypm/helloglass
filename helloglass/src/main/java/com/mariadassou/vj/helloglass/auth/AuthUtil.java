@@ -19,8 +19,9 @@ import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
 import com.google.api.client.http.javanet.NetHttpTransport;
-
 import com.google.api.client.json.jackson.JacksonFactory;
+import com.mariadassou.vj.session.Session;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -39,6 +40,7 @@ import java.util.logging.Logger;
  * @author Jenny Murphy - http://google.com/+JennyMurphy
  */
 public class AuthUtil {
+	//TODO do I really need this store when I have the Session map ?
   public static ListableMemoryCredentialStore store = new ListableMemoryCredentialStore();
   public static final String GLASS_SCOPE = "https://www.googleapis.com/auth/glass.timeline "
       + "https://www.googleapis.com/auth/glass.location "
@@ -76,16 +78,16 @@ public class AuthUtil {
    *
    * @return string user id or null if no one is logged in
    */
-//  public static String getUserId(HttpServletRequest request) {
-//    HttpSession session = request.getSession();
-//    return (String) session.getAttribute("userId");
-//  }
-//
-//  public static void setUserId(HttpServletRequest request, String userId) {
-//    HttpSession session = request.getSession();
-//    session.setAttribute("userId", userId);
-//  }
-//
+  public static String getUserId(String sessionId) {
+    Session session = Session.getSession(sessionId);
+    return session.getUserId();
+  }
+
+  public static void setUserId(String sessionId, String userId) {
+    Session session = Session.getSession(sessionId);
+    session.setUserId(userId);
+  }
+
 //  public static void clearUserId(HttpServletRequest request) throws IOException {
 //    // Delete the credential in the credential store
 //    String userId = getUserId(request);
