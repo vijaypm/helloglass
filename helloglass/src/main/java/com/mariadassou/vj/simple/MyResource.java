@@ -1,7 +1,5 @@
 package com.mariadassou.vj.simple;
 
-import java.util.logging.Logger;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
@@ -16,7 +14,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.api.services.mirror.model.Notification;
+import com.mariadassou.vj.helloglass.auth.AuthFilter;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -24,7 +26,7 @@ import com.google.api.services.mirror.model.Notification;
 @Path("myresource")
 public class MyResource {
 
-	  private static final Logger LOG = Logger.getLogger(MyResource.class.getSimpleName());
+	private static final Logger LOG = LoggerFactory.getLogger(MyResource.class);
 
     /**
      * Method handling HTTP GET requests. The returned object will be sent
@@ -36,6 +38,7 @@ public class MyResource {
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String getIt() {
+		LOG.info("received request to getIt");
         return "Got it!";
     }
 	
@@ -77,6 +80,7 @@ public class MyResource {
     public Response getItem(
 			@Context UriInfo uriInfo, 
 			@PathParam("item_id") String itemId) {  
+    	//TODO need to add JUnit for this
         return Response.temporaryRedirect(  
             UriBuilder.fromUri(uriInfo.getRequestUri()).queryParam("upc",itemId).build()
             ).build();  

@@ -15,21 +15,18 @@
  */
 package com.mariadassou.vj.helloglass.auth;
 
+import java.io.IOException;
+import java.net.URI;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
-import com.google.api.services.mirror.model.Command;
-import com.google.api.services.mirror.model.Contact;
 import com.google.api.services.mirror.model.NotificationConfig;
 import com.google.api.services.mirror.model.Subscription;
 import com.google.api.services.mirror.model.TimelineItem;
-import com.google.common.collect.Lists;
 import com.mariadassou.vj.helloglass.MirrorClient;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.logging.Logger;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Utility functions used when users first authenticate with this service
@@ -37,21 +34,21 @@ import javax.servlet.http.HttpServletRequest;
  * @author Jenny Murphy - http://google.com/+JennyMurphy
  */
 public class NewUserBootstrapper {
-  private static final Logger LOG = Logger.getLogger(NewUserBootstrapper.class.getSimpleName());
+	private static final Logger LOG = LoggerFactory.getLogger(NewUserBootstrapper.class);
 
-  /**
-   * Bootstrap a new user. Do all of the typical actions for a new user:
-   * <ul>
-   * <li>Creating a timeline subscription</li>
-   * <li>Inserting a contact</li>
-   * <li>Sending the user a welcome message</li>
-   * </ul>
-   */
-  public static void bootstrapNewUser(URI baseUri, String userId) throws IOException {
-    Credential credential = AuthUtil.newAuthorizationCodeFlow().loadCredential(userId);
+	/**
+	 * Bootstrap a new user. Do all of the typical actions for a new user:
+	 * <ul>
+	 * <li>Creating a timeline subscription</li>
+	 * <li>Inserting a contact</li>
+	 * <li>Sending the user a welcome message</li>
+	 * </ul>
+	 */
+	public static void bootstrapNewUser(URI baseUri, String userId) throws IOException {
+		Credential credential = AuthUtil.newAuthorizationCodeFlow().loadCredential(userId);
 
-    // TODO Create contact
-/*    Contact starterProjectContact = new Contact();
+		// TODO Create contact
+		/*    Contact starterProjectContact = new Contact();
     starterProjectContact.setId(MainServlet.CONTACT_ID);
     starterProjectContact.setDisplayName(MainServlet.CONTACT_NAME);
     starterProjectContact.setImageUrls(Lists.newArrayList(WebUtil.buildUrl(req,
@@ -60,23 +57,26 @@ public class NewUserBootstrapper {
         new Command().setType("TAKE_A_NOTE")));
     Contact insertedContact = MirrorClient.insertContact(credential, starterProjectContact);
     LOG.info("Bootstrapper inserted contact " + insertedContact.getId() + " for user " + userId);
-*/
-    try {
-      // Subscribe to location updates
-      Subscription subscription =
-          MirrorClient.insertSubscription(credential, baseUri.toString() + "notify/glassnotify", userId,
-              "location");
-      LOG.info("Bootstrapper inserted subscription " + subscription.getId() + " for user " + userId);
-    } catch (GoogleJsonResponseException e) {
-      LOG.warning("Failed to create location subscription. Might be running on "
-          + "localhost. Details:" + e.getDetails().toPrettyString());
-    }
+		 */
+		try {
+			// Subscribe to location updates
+			String callbackUrl = baseUri.toString() + "notify/glassnotify";
+			//TODO replace with real SSL certs in Prod. callbackUrl must be a valid HTTPS URL. 
+			//Refer https://developers.google.com/glass/tools-downloads/subscription-proxy
+			callbackUrl = "https://mirrornotifications.appspot.com/forward?url=" + callbackUrl;
+			Subscription subscription =
+					MirrorClient.insertSubscription(credential, callbackUrl, userId, "location");
+			LOG.info("Bootstrapper inserted subscription " + subscription.getId() + " for user " + userId);
+		} catch (GoogleJsonResponseException e) {
+			LOG.warn("Failed to create location subscription. Might be running on "
+					+ "localhost. Details:" + e.getDetails().toPrettyString());
+		}
 
-    // Send welcome timeline item
-    TimelineItem timelineItem = new TimelineItem();
-    timelineItem.setText("Welcome to My Jeeves");
-    timelineItem.setNotification(new NotificationConfig().setLevel("DEFAULT"));
-    TimelineItem insertedItem = MirrorClient.insertTimelineItem(credential, timelineItem);
-    LOG.info("Bootstrapper inserted welcome message " + insertedItem.getId() + " for user " + userId);
-  }
+		// Send welcome timeline item
+		TimelineItem timelineItem = new TimelineItem();
+		timelineItem.setText("Welcome to My Jeeves");
+		timelineItem.setNotification(new NotificationConfig().setLevel("DEFAULT"));
+		TimelineItem insertedItem = MirrorClient.insertTimelineItem(credential, timelineItem);
+		LOG.info("Bootstrapper inserted welcome message " + insertedItem.getId() + " for user " + userId);
+	}
 }

@@ -11,6 +11,8 @@ import com.google.common.cache.CacheBuilder;
 
 public class Session {
 	
+	public static final String SESSIONID = "JSESSIONID";
+	
 	//TODO may need to optimize the concurrency level and timeout
 	private static Cache<String, Session> sessionMap = CacheBuilder.newBuilder()
             .maximumSize(1000)

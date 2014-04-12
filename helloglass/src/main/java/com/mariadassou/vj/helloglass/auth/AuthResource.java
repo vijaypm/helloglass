@@ -1,7 +1,6 @@
 package com.mariadassou.vj.helloglass.auth;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javax.ws.rs.CookieParam;
 import javax.ws.rs.GET;
@@ -16,6 +15,9 @@ import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.UriBuilder;
 import javax.ws.rs.core.UriInfo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.TokenResponse;
 import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
@@ -28,19 +30,19 @@ import com.mariadassou.vj.session.Session;
 @Path("oauth2callback")
 public class AuthResource {
 
-	private static final Logger LOG = Logger.getLogger(AuthResource.class.getSimpleName());
+	private static final Logger LOG = LoggerFactory.getLogger(AuthResource.class);
 	
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public Response doGet(
-    		@CookieParam(value = "JSESSIONID") String sessionId,
+    		@CookieParam(value = Session.SESSIONID) String sessionId,
     		@QueryParam("error") String error,
     		@QueryParam("code") String code,
     		@Context UriInfo uriInfo) throws IOException {
 
         // If something went wrong, log the error message.
     	if (error != null) {
-    	      LOG.severe("Something went wrong during auth: " + error);
+    	      LOG.error("Something went wrong during auth: " + error);
     	      String result = "Something went wrong during auth: " + error;
     	      return Response.status(Status.OK).entity(result).build();
     	}
@@ -60,7 +62,7 @@ public class AuthResource {
     	      //Set user into session
     	      Session session = Session.getSession(sessionId);
     	      session.setUserId(userId);
-    	      NewCookie sessionCookie = new NewCookie("JSESSIONID", session.getSessionId());
+    	      NewCookie sessionCookie = new NewCookie(Session.SESSIONID, session.getSessionId());
     	      
     	      flow.createAndStoreCredential(tokenResponse, userId);
 
