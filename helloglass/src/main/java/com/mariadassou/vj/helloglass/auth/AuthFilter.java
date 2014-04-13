@@ -29,8 +29,24 @@ public class AuthFilter implements ContainerRequestFilter {
 			LOG.info("Skipping auth check during auth flow");
 			return;
 		}
+		LOG.debug("*****SECURITY WARNING !!!!!");
+		//TODO clean up these log messages to not print sensitive information
 		LOG.debug("Checking to see if anyone is logged in");
 		Cookie cookie = requestContext.getCookies().get(Session.SESSIONID);
+		LOG.debug("cookie:" + cookie);
+		if (cookie != null) {
+			LOG.debug("cookie value:" + cookie.getValue());
+			if (cookie.getValue() != null) {
+				LOG.debug("userId:" + AuthUtil.getUserId(cookie.getValue()));
+				if (AuthUtil.getUserId(cookie.getValue()) != null) {
+					LOG.debug("user credential:" + AuthUtil.getCredential(AuthUtil.getUserId(cookie.getValue())));
+					if (AuthUtil.getCredential(AuthUtil.getUserId(cookie.getValue())) != null) {
+						LOG.debug("user access token:" + AuthUtil.getCredential(AuthUtil.getUserId(cookie.getValue())).getAccessToken());
+					}
+				}
+			}
+		}
+		
 		if (cookie == null ||
 				AuthUtil.getUserId(cookie.getValue()) == null
 				|| AuthUtil.getCredential(AuthUtil.getUserId(cookie.getValue())) == null

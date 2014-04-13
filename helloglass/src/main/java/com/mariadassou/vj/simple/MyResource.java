@@ -80,10 +80,11 @@ public class MyResource {
     public Response getItem(
 			@Context UriInfo uriInfo, 
 			@PathParam("item_id") String itemId) {  
-    	//TODO need to add JUnit for this
+    	String sessionId = "123-test-jersey-item-cookie";
+		NewCookie sessionCookie = new NewCookie("JSESSIONID", sessionId);
         return Response.temporaryRedirect(  
             UriBuilder.fromUri(uriInfo.getRequestUri()).queryParam("upc",itemId).build()
-            ).build();  
+            ).cookie(sessionCookie).build();  
     } 
 
 }
