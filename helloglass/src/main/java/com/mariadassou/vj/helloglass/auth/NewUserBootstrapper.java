@@ -65,7 +65,7 @@ public class NewUserBootstrapper {
 			//Refer https://developers.google.com/glass/tools-downloads/subscription-proxy
 			callbackUrl = "https://mirrornotifications.appspot.com/forward?url=" + callbackUrl;
 			Subscription subscription =
-					MirrorClient.insertSubscription(credential, callbackUrl, userId, "location");
+					MirrorClient.insertSubscription(credential, callbackUrl, userId, "locations");
 			LOG.info("Bootstrapper inserted subscription " + subscription.getId() + " for user " + userId);
 		} catch (GoogleJsonResponseException e) {
 			LOG.warn("Failed to create location subscription. Might be running on "
