@@ -25,7 +25,8 @@ public class AuthFilter implements ContainerRequestFilter {
 	@Override
 	public void filter(ContainerRequestContext requestContext) throws IOException {
 		LOG.info("Requested URI:" + requestContext.getUriInfo().getPath());
-		if(requestContext.getUriInfo().getPath().startsWith("/oauth2callback")){
+		if(requestContext.getUriInfo().getPath().startsWith("/oauth2callback") ||
+				requestContext.getUriInfo().getPath().startsWith("/notify")){
 			LOG.info("Skipping auth check during auth flow");
 			return;
 		}
