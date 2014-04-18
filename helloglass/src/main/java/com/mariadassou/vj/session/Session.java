@@ -22,6 +22,14 @@ public class Session {
             .recordStats()
             .build();
 	
+	private static Cache<String, Session> userMap = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(5, TimeUnit.MINUTES)
+            //.removalListener(new MyRemovalListener()) 
+            .concurrencyLevel(4)
+            .recordStats()
+            .build();
+	
 	@NotNull
 	public static Session getSession(@Nullable String sessionId) {
 		Session session  = null;
@@ -36,10 +44,20 @@ public class Session {
 		return session;
 	}
 
-	public static void clearSession(String sessionId) {
-		sessionMap.invalidate(sessionId);
+	public static void clearSession(Session session) {
+		if (session != null) {
+			userMap.invalidate(session.getUserId());
+			sessionMap.invalidate(session.getSessionId());
+		}
 	}
 	
+	public static void clearSession(String sessionId) {
+		clearSession(sessionMap.getIfPresent(sessionId));
+	}
+	public static void clearUser(String userId) {
+		clearSession(userMap.getIfPresent(userId));
+	}
+		
 	private String userId;
 	private String sessionId;
 	
@@ -49,6 +67,7 @@ public class Session {
 	
 	public void setUserId(String newUserId) {
 		this.userId = newUserId;
+		userMap.put(newUserId, this);
 	}
 	
 	public String getUserId() {
@@ -58,4 +77,5 @@ public class Session {
 	public String getSessionId() {
 		return this.sessionId;
 	}
+
 }

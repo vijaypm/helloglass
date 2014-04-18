@@ -88,14 +88,13 @@ public class AuthUtil {
     session.setUserId(userId);
   }
 
-//  public static void clearUserId(HttpServletRequest request) throws IOException {
-//    // Delete the credential in the credential store
-//    String userId = getUserId(request);
-//    store.delete(userId, getCredential(userId));
-//
-//    // Remove their ID from the local session
-//    request.getSession().removeAttribute("userId");
-//  }
+  public static void clearUserId(String userId) throws IOException {
+    // Delete the credential in the credential store
+    store.delete(userId, getCredential(userId));
+
+    // Remove their ID from the local session
+    Session.clearUser(userId);
+  }
 
   public static Credential getCredential(String userId) throws IOException {
     if (userId == null) {

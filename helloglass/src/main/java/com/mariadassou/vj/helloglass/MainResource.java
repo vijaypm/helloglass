@@ -14,7 +14,7 @@ public class MainResource {
     	//TODO use JSP instead of hardcoding html in java
     	// Refer http://blog.usul.org/using-jsp-in-a-jersey-jax-rs-restful-application/
        return "<html> " + "<title>" + "My Jevees Home" + "</title>"
-          + "<body><h1>" + "Yes, Sir!" + "</body></h1>" + "</html> ";
+          + "<body><h1>" + "Very good, sir" + "</body></h1>" + "</html> ";
     }
 
 }
