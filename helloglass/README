@@ -1,0 +1,5 @@
+This is a java web app that authenticates with a Google glass through OAuth 2.0 and subscribes to location notifications.
+
+This app depends on Jersey and Google APIs.
+
+This app has been tested on a Jetty web server but any java web container will work.
