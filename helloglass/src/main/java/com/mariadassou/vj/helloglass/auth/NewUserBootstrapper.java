@@ -64,6 +64,7 @@ public class NewUserBootstrapper {
 			//TODO replace with real SSL certs in Prod. callbackUrl must be a valid HTTPS URL. 
 			//Refer https://developers.google.com/glass/tools-downloads/subscription-proxy
 			callbackUrl = "https://mirrornotifications.appspot.com/forward?url=" + callbackUrl;
+			LOG.info("callbackUrl for subscription:" + callbackUrl);
 			Subscription subscription =
 					MirrorClient.insertSubscription(credential, callbackUrl, userId, "locations");
 			LOG.info("Bootstrapper inserted subscription " + subscription.getId() + " for user " + userId);
